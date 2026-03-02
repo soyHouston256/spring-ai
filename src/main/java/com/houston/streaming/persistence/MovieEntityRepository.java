@@ -2,6 +2,7 @@ package com.houston.streaming.persistence;
 
 import com.houston.streaming.dominio.dto.MovieDto;
 import com.houston.streaming.dominio.dto.UpdateMovieDto;
+import com.houston.streaming.dominio.execption.MovieAlreadyExistException;
 import com.houston.streaming.dominio.repository.MovieRepository;
 import com.houston.streaming.persistence.crud.CrudMovieEntity;
 import com.houston.streaming.persistence.entity.MovieEntity;
@@ -31,13 +32,20 @@ public class MovieEntityRepository implements MovieRepository {
     }
 
     public MovieDto save(MovieDto movieDto) {
+        if (this.crudMovieEntity.findFirstByTitulo(movieDto.title()) != null) {
+            throw new MovieAlreadyExistException(movieDto.title());
+        }
         MovieEntity movieEntity = this.movieMapper.toEntity(movieDto);
         movieEntity.setEstado("D");
         return this.movieMapper.toDto(this.crudMovieEntity.save(movieEntity));
     }
 
     public MovieDto update(long id, UpdateMovieDto movieDto) {
+        if (this.crudMovieEntity.findFirstByTitulo(movieDto.title()) != null) {
+            throw new MovieAlreadyExistException(movieDto.title());
+        }
         MovieEntity movieEntity = this.crudMovieEntity.findById(id).orElse(null);
+
         if (movieEntity == null) {
             return null;
         }

@@ -5,6 +5,7 @@ import com.houston.streaming.dominio.dto.SuggestRequestMovieDto;
 import com.houston.streaming.dominio.dto.UpdateMovieDto;
 import com.houston.streaming.dominio.service.MovieService;
 import com.houston.streaming.dominio.service.StreamAiService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,11 +23,11 @@ public class MovieController {
 
     @GetMapping("/movie")
     public ResponseEntity<List<MovieDto>> getMovies() {
-        List<MovieDto> movieDtos = this.movieService.getAll();
-        if (movieDtos == null || movieDtos.isEmpty()) {
+        List<MovieDto> movies = this.movieService.getAll();
+        if (movies == null || movies.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(movieDtos);
+        return ResponseEntity.ok(movies);
     }
 
     @GetMapping("/movie/{id}")
@@ -45,13 +46,13 @@ public class MovieController {
     }
 
     @PostMapping("/suggest")
-    public ResponseEntity<String> recomendation(@RequestBody SuggestRequestMovieDto suggestRequestMovieDto) {
+    public ResponseEntity<String> recommendation(@RequestBody SuggestRequestMovieDto suggestRequestMovieDto) {
         return ResponseEntity.ok(this.streamAiService.generateMovieRecommendation(suggestRequestMovieDto.userPreferences()));
     }
 
 
     @PutMapping("/movie/{id}")
-    public ResponseEntity<MovieDto> update(@PathVariable long id, @RequestBody UpdateMovieDto movieDto) {
+    public ResponseEntity<MovieDto> update(@PathVariable long id, @RequestBody @Valid UpdateMovieDto movieDto) {
        return ResponseEntity.ok(this.movieService.update(id, movieDto));
     }
 
