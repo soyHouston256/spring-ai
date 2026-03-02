@@ -2,10 +2,9 @@ package com.houston.streaming.web.web.controller;
 
 import com.houston.streaming.dominio.dto.MovieDto;
 import com.houston.streaming.dominio.service.MovieService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,5 +31,11 @@ public class MovieController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(movieDto);
+    }
+
+    @PostMapping("/movie")
+    public ResponseEntity<MovieDto> add(@RequestBody MovieDto movieDto) {
+        MovieDto movie = this.movieService.add(movieDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 }

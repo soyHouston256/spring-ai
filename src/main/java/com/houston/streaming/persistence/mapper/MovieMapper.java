@@ -2,6 +2,7 @@ package com.houston.streaming.persistence.mapper;
 
 import com.houston.streaming.dominio.dto.MovieDto;
 import com.houston.streaming.persistence.entity.MovieEntity;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,4 +17,9 @@ public interface MovieMapper {
     @Mapping(source = "clasificacion", target = "rating")
     MovieDto toDto(MovieEntity entity);
     List<MovieDto> toDto(Iterable<MovieEntity> entities);
+
+    @InheritInverseConfiguration
+    @Mapping(source = "genre", target = "genero", qualifiedByName = "genreToString")
+    MovieEntity toEntity(MovieDto dto);
 }
+
