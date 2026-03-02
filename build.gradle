@@ -1,0 +1,44 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.4.2'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.houston'
+version = '0.0.1-SNAPSHOT'
+description = 'api of streaming platform'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+ext {
+	langchain4jVersion = '1.11.0'
+	langchain4jSpringVersion = '1.11.0-beta19'
+}
+
+dependencies {
+	// Spring Boot
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// LangChain4j core
+	implementation "dev.langchain4j:langchain4j:${langchain4jVersion}"
+	implementation "dev.langchain4j:langchain4j-open-ai:${langchain4jVersion}"
+
+	// LangChain4j Spring Boot integration
+	implementation "dev.langchain4j:langchain4j-spring-boot-starter:${langchain4jSpringVersion}"
+	implementation "dev.langchain4j:langchain4j-open-ai-spring-boot-starter:${langchain4jSpringVersion}"
+
+	// Testing
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
