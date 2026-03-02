@@ -1,8 +1,10 @@
 package com.houston.streaming.web.web.controller;
 
 import com.houston.streaming.dominio.dto.MovieDto;
+import com.houston.streaming.dominio.dto.SuggestRequestMovieDto;
 import com.houston.streaming.dominio.dto.UpdateMovieDto;
 import com.houston.streaming.dominio.service.MovieService;
+import com.houston.streaming.dominio.service.StreamAiService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +14,10 @@ import java.util.List;
 @RestController
 public class MovieController {
     private final MovieService movieService;
-    public MovieController(MovieService movieService) {
+    private final StreamAiService streamAiService;
+    public MovieController(MovieService movieService,  StreamAiService streamAiService) {
         this.movieService = movieService;
+        this.streamAiService = streamAiService;
     }
 
     @GetMapping("/movie")
@@ -40,6 +44,12 @@ public class MovieController {
         return ResponseEntity.status(HttpStatus.CREATED).body(movie);
     }
 
+    @PostMapping("/suggest")
+    public ResponseEntity<String> recomendation(@RequestBody SuggestRequestMovieDto suggestRequestMovieDto) {
+        return ResponseEntity.ok(this.streamAiService.generateMovieRecommendation(suggestRequestMovieDto.userPreferences()));
+    }
+
+
     @PutMapping("/movie/{id}")
     public ResponseEntity<MovieDto> update(@PathVariable long id, @RequestBody UpdateMovieDto movieDto) {
        return ResponseEntity.ok(this.movieService.update(id, movieDto));
@@ -48,6 +58,6 @@ public class MovieController {
     @DeleteMapping("/movie/{id}")
     public ResponseEntity<Void> delete(@PathVariable long id) {
         this.movieService.delete(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok().build();
     }
 }
