@@ -1,6 +1,7 @@
 package com.houston.streaming.web.web.controller;
 
 import com.houston.streaming.dominio.dto.MovieDto;
+import com.houston.streaming.dominio.dto.UpdateMovieDto;
 import com.houston.streaming.dominio.service.MovieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,5 +38,16 @@ public class MovieController {
     public ResponseEntity<MovieDto> add(@RequestBody MovieDto movieDto) {
         MovieDto movie = this.movieService.add(movieDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(movie);
+    }
+
+    @PutMapping("/movie/{id}")
+    public ResponseEntity<MovieDto> update(@PathVariable long id, @RequestBody UpdateMovieDto movieDto) {
+       return ResponseEntity.ok(this.movieService.update(id, movieDto));
+    }
+
+    @DeleteMapping("/movie/{id}")
+    public ResponseEntity<Void> delete(@PathVariable long id) {
+        this.movieService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
